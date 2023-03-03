@@ -88,6 +88,7 @@ def start_server(
     blocks: Blocks,
     server_name: str | None = None,
     server_port: int | None = None,
+    root_path: str | None = None,
     ssl_keyfile: str | None = None,
     ssl_certfile: str | None = None,
     ssl_keyfile_password: str | None = None,
@@ -97,6 +98,7 @@ def start_server(
     blocks: The Blocks object to run on the server
     server_name: to make app accessible on local network, set this to "0.0.0.0". Can be set by environment variable GRADIO_SERVER_NAME.
     server_port: will start gradio app on this port (if available). Can be set by environment variable GRADIO_SERVER_PORT.
+    root_path: server root-path
     auth: If provided, username and password (or list of username-password tuples) required to access the Blocks. Can also provide function that takes username and password and returns True if valid login.
     ssl_keyfile: If a path to a file is provided, will use this as the private key file to create a local server running on https.
     ssl_certfile: If a path to a file is provided, will use this as the signed certificate for https. Needs to be provided if ssl_keyfile is provided.
@@ -136,6 +138,9 @@ def start_server(
         path_to_local_server = "https://{}:{}/".format(url_host_name, port)
     else:
         path_to_local_server = "http://{}:{}/".format(url_host_name, port)
+        
+    if root_path is not None:    
+        path_to_local_server = "{}{}".format(path_to_local_server, root_path)
 
     app = App.create_app(blocks)
 
@@ -145,6 +150,7 @@ def start_server(
         app=app,
         port=port,
         host=server_name,
+        root_path=root_path,
         log_level="warning",
         ssl_keyfile=ssl_keyfile,
         ssl_certfile=ssl_certfile,
