@@ -1270,6 +1270,7 @@ class Blocks(BlockContext):
         show_error: bool = False,
         server_name: str | None = None,
         server_port: int | None = None,
+        root_path: str | None = None,
         show_tips: bool = False,
         height: int = 500,
         width: int | str = "100%",
@@ -1298,6 +1299,7 @@ class Blocks(BlockContext):
             show_error: If True, any errors in the interface will be displayed in an alert modal and printed in the browser console log
             server_port: will start gradio app on this port (if available). Can be set by environment variable GRADIO_SERVER_PORT. If None, will search for an available port starting at 7860.
             server_name: to make app accessible on local network, set this to "0.0.0.0". Can be set by environment variable GRADIO_SERVER_NAME. If None, will use "127.0.0.1".
+            root_path: to support root-path
             show_tips: if True, will occasionally show tips about new Gradio features
             enable_queue: DEPRECATED (use .queue() method instead.) if True, inference requests will be served through a queue instead of with parallel threads. Required for longer inference times (> 1min) to prevent timeout. The default option in HuggingFace Spaces is True. The default option elsewhere is False.
             max_threads: the maximum number of total threads that the Gradio app can generate in parallel. The default is inherited from the starlette library (currently 40). Applies whether the queue is enabled or not. But if queuing is enabled, this parameter is increaseed to be at least the concurrency_count of the queue.
@@ -1338,6 +1340,7 @@ class Blocks(BlockContext):
         self.height = height
         self.width = width
         self.favicon_path = favicon_path
+        self.root_path = root_path
 
         if enable_queue is not None:
             self.enable_queue = enable_queue
@@ -1398,6 +1401,7 @@ class Blocks(BlockContext):
                 self,
                 server_name,
                 server_port,
+                root_path,
                 ssl_keyfile,
                 ssl_certfile,
                 ssl_keyfile_password,
